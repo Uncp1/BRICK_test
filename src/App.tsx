@@ -1,12 +1,12 @@
 import React from "react";
+import SearchPage from "./pages/SearchPage";
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="text-pretty p-10 text-center">
-      <h1 className="text-4xl font-bold">Rick and Morty Character Search</h1>
-      <p className="mt-4 text-lg">Start searching for characters!</p>
+    <div>
+      <SearchPage />
     </div>
   );
-}
+};
 
 export default App;
