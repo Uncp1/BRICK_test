@@ -30,7 +30,8 @@ const SearchPage: React.FC = () => {
       <SearchForm onSearch={handleSearch} />
 
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
+        <div className="space-y-4">
+          {characters.length === 0 && <p>No characters found. Try adjusting your search!</p>}
           {characters.map((character) => (
             <CharacterCard
               key={character.id}
