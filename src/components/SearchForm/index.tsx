@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Character } from '../../types';
 
 interface SearchFormProps {
-  onSearch: (name: string, status: string, species: string) => void;
+  onSearch: (name: string, status: string, species: string, episode: string) => void;
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
@@ -10,9 +10,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
   const [status, setStatus] = useState('');
   const [species, setSpecies] = useState('');
   const [speciesList, setSpeciesList] = useState<string[]>([]);
-
-  //const [isLoading, setIsLoading] = useState(true);
- // const [error, setError] = useState(null);
+  const [gender, SetGender] = useState('');
 
   // фетчим все виды при загрузке компонента
   useEffect(() => {
@@ -33,62 +31,98 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
 
         const allSpecies = Array.from(new Set(allCharacters.map((char: Character) => char.species))) as string[];
         setSpeciesList(allSpecies);
-       // setIsLoading(false);
       } catch (error) {
         console.error('Error fetching characters:', error);
-      //  setError('Failed to load character data');
-        //setIsLoading(false);
       }
     };
 
     fetchAllCharacters();
   }, []);
 
-  console.log(speciesList);
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSearch(name, status, species);
+    onSearch(name, status, species, gender);
   };
 
   return (
     <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
+      <label htmlFor="name" className="text-white">
+        Имя персонажа
+      </label>
       <input
         type="text"
-        placeholder="Character Name"
+        id="name"
+        placeholder="Например, Rick"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="border p-2 rounded"
+        className="border border-gray-400 p-2 rounded bg-gray-800 text-white placeholder-gray-400"
       />
+  
 
-      <select
-        value={status}
-        onChange={(e) => setStatus(e.target.value)}
-        className="border p-2 rounded"
+      <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
+        <div className="flex-1">
+          <label htmlFor="gender" className="text-white">
+            Пол
+          </label>
+          <select
+            id="gender"
+            value={gender} 
+            onChange={(e) => SetGender(e.target.value)} 
+            className="border border-gray-400 p-2 rounded bg-gray-800 text-white w-full"
+          >
+            <option value="">Выбрать пол</option>
+            <option value="female">Женский</option>
+            <option value="male">Мужской</option>
+            <option value="genderless">Бесполый</option>
+            <option value="unknown">Неизвестно</option>
+          </select>
+        </div>
+    
+        <div className="flex-1">
+          <label htmlFor="status" className="text-white">
+            Жив?
+          </label>
+          <select
+            id="status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="border border-gray-400 p-2 rounded bg-gray-800 text-white w-full"
+          >
+            <option value="">Выбрать статус</option>
+            <option value="alive">Жив</option>
+            <option value="dead">Мёртв</option>
+            <option value="unknown">Неизвестно</option>
+          </select>
+        </div>
+    
+        <div className="flex-1">
+          <label htmlFor="species" className="text-white">
+            Раса
+          </label>
+          <select
+            id="species"
+            value={species}
+            onChange={(e) => setSpecies(e.target.value)}
+            className="border border-gray-400 p-2 rounded bg-gray-800 text-white w-full"
+          >
+            <option value="">Выбрать расу</option>
+            {speciesList.map((speciesItem) => (
+              <option key={speciesItem} value={speciesItem}>
+                {speciesItem}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+    
+      <button
+        type="submit"
+        className="bg-green-600 text-white p-2 rounded shadow-md transition duration-300 ease-in-out hover:bg-green-500"
       >
-        <option value="">Alive?</option>
-        <option value="alive">Alive</option>
-        <option value="dead">Dead</option>
-        <option value="unknown">Unknown</option>
-      </select>
-
-      <select
-        value={species}
-        onChange={(e) => setSpecies(e.target.value)}
-        className="border p-2 rounded"
-      >
-        <option value="">Select Species</option>
-        {speciesList.map((speciesItem) => (
-          <option key={speciesItem} value={speciesItem}>
-            {speciesItem}
-          </option>
-        ))}
-      </select>
-
-      <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-        Search
+        Найти
       </button>
-    </form>
+  </form>
+
   );
 };
 

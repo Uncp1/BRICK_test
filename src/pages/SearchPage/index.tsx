@@ -1,26 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react';
 import SearchForm from '../../components/SearchForm';
 import CharacterCard from '../../components/CharacterCard';
-import CharacterDetails from '../../components/CharacterDetails ';
+import CharacterDetails from '../../components/CharacterDetails';
 import { Character } from '../../types';
+
 
 const SearchPage: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
-
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null); 
+  const [error, setError] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
-  const handleSearch = async (name: string, status: string, species: string) => {
+
+  console.log(characters)
+  const handleSearch = async (name: string, status: string, species: string, gender: string) => {
     setLoading(true);
     setError(null);
     setCharacters([]);
 
     let query = `https://rickandmortyapi.com/api/character?name=${name}`;
-
     if (status) query += `&status=${status}`;
     if (species) query += `&species=${species}`;
+    if (gender) query += `&episode=${gender}`;
 
     try {
       const response = await fetch(query);
@@ -35,7 +37,6 @@ const SearchPage: React.FC = () => {
       setLoading(false);
     }
   };
-
 
   const handleCloseModal = () => {
     setSelectedCharacter(null);
@@ -58,18 +59,19 @@ const SearchPage: React.FC = () => {
   }, [selectedCharacter]);
 
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Rick and Morty Universe</h1>
+    <div className="p-6 font-mono text-white bg-black min-h-screen">
+      <h1 className="text-4xl mb-6">Вселенная Рик и Морти</h1>
       <SearchForm onSearch={handleSearch} />
 
+      {/* Loading Spinner */}
       {loading ? (
         <div className="flex justify-center items-center mt-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-600"></div>
         </div>
       ) : (
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
           {error && <p className="text-red-500">{error}</p>}
-          {characters.length === 0 && !error && <p>No characters found. Try adjusting your search!</p>}
+          {characters.length === 0 && !error && <p className="text-gray-400">Ничего не найдено. Попробуйте изменить параметры поиска!</p>}
           {characters.map((character) => (
             <CharacterCard
               key={character.id}
@@ -80,12 +82,13 @@ const SearchPage: React.FC = () => {
         </div>
       )}
 
+      {/* Modal for Character Details */}
       {selectedCharacter && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div ref={modalRef} className="bg-white p-6 rounded shadow-lg relative w-full max-w-md">
+          <div ref={modalRef} className="bg-gray-800 text-white p-6 rounded shadow-lg relative w-full max-w-md">
             <button
               onClick={handleCloseModal}
-              className="absolute top-2 right-2 text-xl font-bold text-gray-700"
+              className="absolute top-2 right-2 text-xl font-bold text-gray-400 hover:text-gray-200"
             >
               &times;
             </button>
