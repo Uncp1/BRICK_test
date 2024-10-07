@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import SearchForm from '../../components/SearchForm';
 import CharacterCard from '../../components/CharacterCard';
 import CharacterDetails from '../../components/CharacterDetails ';
@@ -7,8 +7,10 @@ import { Character } from '../../types';
 const SearchPage: React.FC = () => {
   const [characters, setCharacters] = useState<Character[]>([]);
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null); 
+  const modalRef = useRef<HTMLDivElement | null>(null);
 
   const handleSearch = async (name: string, status: string, species: string) => {
     setLoading(true);
@@ -34,38 +36,63 @@ const SearchPage: React.FC = () => {
     }
   };
 
-  const handleSelectCharacter = (character: Character) => {
-    setSelectedCharacter(character);
+
+  const handleCloseModal = () => {
+    setSelectedCharacter(null);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        handleCloseModal();
+      }
+    };
+
+    if (selectedCharacter) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [selectedCharacter]);
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Rick and Morty Universe</h1>
       <SearchForm onSearch={handleSearch} />
 
-
       {loading ? (
         <div className="flex justify-center items-center mt-4">
-          <div className="loader border-t-4 border-blue-500 w-12 h-12 rounded-full animate-spin"/>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-blue-500"></div>
         </div>
       ) : (
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-4">
-          {characters.length === 0 && <p>No characters found. Try adjusting your search!</p>}
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+          {error && <p className="text-red-500">{error}</p>}
+          {characters.length === 0 && !error && <p>No characters found. Try adjusting your search!</p>}
           {characters.map((character) => (
             <CharacterCard
               key={character.id}
               character={character}
-              onSelect={handleSelectCharacter}
+              onSelect={() => setSelectedCharacter(character)}
             />
           ))}
         </div>
+      )}
 
-        {selectedCharacter && (
-          <CharacterDetails character={selectedCharacter} />
-        )}
-      </div>
-          )}
+      {selectedCharacter && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+          <div ref={modalRef} className="bg-white p-6 rounded shadow-lg relative w-full max-w-md">
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-2 right-2 text-xl font-bold text-gray-700"
+            >
+              &times;
+            </button>
+            <CharacterDetails character={selectedCharacter} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
