@@ -47,12 +47,12 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
   return (
     <form className="flex flex-col space-y-4" onSubmit={handleSubmit}>
       <label htmlFor="name" className="text-white">
-        Имя персонажа
+        Character name
       </label>
       <input
         type="text"
         id="name"
-        placeholder="Например, Rick"
+        placeholder="Rick"
         value={name}
         onChange={(e) => setName(e.target.value)}
         className="border border-gray-400 p-2 rounded bg-gray-800 text-white placeholder-gray-400"
@@ -62,7 +62,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
       <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
         <div className="flex-1">
           <label htmlFor="gender" className="text-white">
-            Пол
+            Gender
           </label>
           <select
             id="gender"
@@ -70,17 +70,17 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
             onChange={(e) => SetGender(e.target.value)} 
             className="border border-gray-400 p-2 rounded bg-gray-800 text-white w-full"
           >
-            <option value="">Выбрать пол</option>
-            <option value="female">Женский</option>
-            <option value="male">Мужской</option>
-            <option value="genderless">Бесполый</option>
-            <option value="unknown">Неизвестно</option>
+            <option value="">Choose gender</option>
+            <option value="female">Female</option>
+            <option value="male">Male</option>
+            <option value="genderless">Genderless</option>
+            <option value="unknown">Unknown</option>
           </select>
         </div>
     
         <div className="flex-1">
           <label htmlFor="status" className="text-white">
-            Жив?
+            Is alive?
           </label>
           <select
             id="status"
@@ -88,16 +88,16 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
             onChange={(e) => setStatus(e.target.value)}
             className="border border-gray-400 p-2 rounded bg-gray-800 text-white w-full"
           >
-            <option value="">Выбрать статус</option>
-            <option value="alive">Жив</option>
-            <option value="dead">Мёртв</option>
-            <option value="unknown">Неизвестно</option>
+            <option value="">Choose status</option>
+            <option value="alive">Alive</option>
+            <option value="dead">Dead</option>
+            <option value="unknown">Unknown</option>
           </select>
         </div>
     
         <div className="flex-1">
           <label htmlFor="species" className="text-white">
-            Раса
+            Race
           </label>
           <select
             id="species"
@@ -105,7 +105,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
             onChange={(e) => setSpecies(e.target.value)}
             className="border border-gray-400 p-2 rounded bg-gray-800 text-white w-full"
           >
-            <option value="">Выбрать расу</option>
+            <option value="">Choose race</option>
             {speciesList.map((speciesItem) => (
               <option key={speciesItem} value={speciesItem}>
                 {speciesItem}
@@ -119,7 +119,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
         type="submit"
         className="bg-green-600 text-white p-2 rounded shadow-md transition duration-300 ease-in-out hover:bg-green-500"
       >
-        Найти
+        Find
       </button>
   </form>
 

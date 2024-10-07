@@ -12,8 +12,6 @@ const SearchPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
-
-  console.log(characters)
   const handleSearch = async (name: string, status: string, species: string, gender: string) => {
     setLoading(true);
     setError(null);
@@ -22,7 +20,7 @@ const SearchPage: React.FC = () => {
     let query = `https://rickandmortyapi.com/api/character?name=${name}`;
     if (status) query += `&status=${status}`;
     if (species) query += `&species=${species}`;
-    if (gender) query += `&episode=${gender}`;
+    if (gender) query += `&gender=${gender}`;
 
     try {
       const response = await fetch(query);
@@ -60,18 +58,16 @@ const SearchPage: React.FC = () => {
 
   return (
     <div className="p-6 font-mono text-white bg-black min-h-screen">
-      <h1 className="text-4xl mb-6">Вселенная Рик и Морти</h1>
+      <h1 className="text-4xl mb-6">Rick and Morty Universe</h1>
       <SearchForm onSearch={handleSearch} />
 
-      {/* Loading Spinner */}
       {loading ? (
         <div className="flex justify-center items-center mt-4">
           <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-b-4 border-green-600"></div>
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
           {error && <p className="text-red-500">{error}</p>}
-          {characters.length === 0 && !error && <p className="text-gray-400">Ничего не найдено. Попробуйте изменить параметры поиска!</p>}
           {characters.map((character) => (
             <CharacterCard
               key={character.id}
@@ -82,7 +78,6 @@ const SearchPage: React.FC = () => {
         </div>
       )}
 
-      {/* Modal for Character Details */}
       {selectedCharacter && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div ref={modalRef} className="bg-gray-800 text-white p-6 rounded shadow-lg relative w-full max-w-md">
