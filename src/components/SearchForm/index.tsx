@@ -10,7 +10,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
   const [status, setStatus] = useState('');
   const [species, setSpecies] = useState('');
   const [speciesList, setSpeciesList] = useState<string[]>([]);
-  const [gender, SetGender] = useState('');
+  const [gender, setGender] = useState('');
 
   // фетчим все виды при загрузке компонента
   useEffect(() => {
@@ -38,6 +38,26 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
 
     fetchAllCharacters();
   }, []);
+
+  useEffect(() => {
+    const storedName = localStorage.getItem('characterName');
+    const storedStatus = localStorage.getItem('characterStatus');
+    const storedSpecies = localStorage.getItem('characterSpecies');
+    const storedGender = localStorage.getItem('characterGender');
+
+    if (storedName) setName(storedName);
+    if (storedStatus) setStatus(storedStatus);
+    if (storedSpecies) setSpecies(storedSpecies);
+    if (storedGender) setGender(storedGender);
+  }, []);
+
+  // сохранение фильтров в локальном хранилище
+  useEffect(() => {
+    localStorage.setItem('characterName', name);
+    localStorage.setItem('characterStatus', status);
+    localStorage.setItem('characterSpecies', species);
+    localStorage.setItem('characterGender', gender);
+  }, [name, status, species, gender]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +87,7 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch }) => {
           <select
             id="gender"
             value={gender} 
-            onChange={(e) => SetGender(e.target.value)} 
+            onChange={(e) => setGender(e.target.value)} 
             className="border border-gray-400 p-2 rounded bg-gray-800 text-white w-full"
           >
             <option value="">Choose gender</option>

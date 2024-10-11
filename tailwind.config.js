@@ -3,7 +3,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        mono: ['VT323', 'monospace'],
+        mono: ['Orbitron', 'sans-serif'],
       },
     },
   },
